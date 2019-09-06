@@ -134,6 +134,11 @@ skadapanel2:CreatePanel("Transparent", skadapanel1:GetWidth(), skadapanel1:GetHe
 skadapanel2:SetBackdropBorderColor(T.color.r, T.color.g, T.color.b)
 skadapanel2:SetBackdropColor(0, 0, 0, C.chat.background_alpha)
 
+local skadapanel3 = CreateFrame("Frame", "SkadaPanel2", UIParent)
+skadapanel3:CreatePanel("Transparent", skadapanel2:GetWidth(), skadapanel2:GetHeight(), "BOTTOMRIGHT", skadapanel2, "BOTTOMLEFT", -3, 0)
+skadapanel3:SetBackdropBorderColor(T.color.r, T.color.g, T.color.b)
+skadapanel3:SetBackdropColor(0, 0, 0, C.chat.background_alpha)
+
 ----------------------------------------------------------------------------------------
 --	Top panel
 ----------------------------------------------------------------------------------------
