@@ -74,9 +74,17 @@ local isCaster = {
 }
 
 local function CheckRole()
-	local spec = GetSpecialization()
-	local role = spec and GetSpecializationRole(spec)
+	local spec, role
+	if T.classic then
+		spec = T.GetSpecialization()
+		role = spec and T.GetSpecializationRole(spec)
+		
+	else
+		spec = GetSpecialization()
+		role = spec and GetSpecializationRole(spec)
+	end
 
+	T.Spec = spec
 	if role == "TANK" then
 		T.Role = "Tank"
 	elseif role == "HEALER" then
@@ -431,7 +439,6 @@ function T.SkinDropDownBox(frame, width, pos)
 	if text then
 		text:ClearAllPoints()
 		text:SetPoint("RIGHT", button, "LEFT", -2, 0)
-		text:SetWidth(frame:GetWidth() / 1.5)
 	end
 
 	button:ClearAllPoints()
@@ -678,6 +685,25 @@ function T.SkinHelpBox(frame)
 	end
 	if frame.Arrow then
 		frame.Arrow:Hide()
+	end
+end
+
+function T.SkinStatusBarWidget(frame)
+	local bar = frame.Bar
+	local atlas = bar:GetStatusBarAtlas()
+	if not atlas then
+		bar:SetStatusBarTexture(C.media.texture)
+	end
+	if not bar.styled then
+		bar.BGLeft:SetAlpha(0)
+		bar.BGRight:SetAlpha(0)
+		bar.BGCenter:SetAlpha(0)
+		bar.BorderLeft:SetAlpha(0)
+		bar.BorderRight:SetAlpha(0)
+		bar.BorderCenter:SetAlpha(0)
+		bar.Spark:SetAlpha(0)
+		bar:CreateBackdrop("Overlay")
+		bar.styled = true
 	end
 end
 
