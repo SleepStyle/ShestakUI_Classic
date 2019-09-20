@@ -1027,6 +1027,30 @@ local function Shared(self, unit)
 		self.Swing.Text = T.SetFontString(self.Swing, C.font.unit_frames_font, C.font.unit_frames_font_size, C.font.unit_frames_font_style)
 		self.Swing.Text:SetPoint("CENTER", 0, 0)
 		self.Swing.Text:SetTextColor(1, 1, 1)
+
+		self.SwingOH = CreateFrame("StatusBar", self:GetName().."_SwingOH", self)
+		self.SwingOH:CreateBackdrop("Default")
+		self.SwingOH:SetPoint("BOTTOMRIGHT", self.Swing, "BOTTOMRIGHT", 0, -10)
+		self.SwingOH:SetSize(281, 5)
+		self.SwingOH:SetStatusBarTexture(C.media.texture)
+		if C.unitframe.own_color == true then
+			self.SwingOH:SetStatusBarColor(unpack(C.unitframe.uf_color))
+		else
+			self.SwingOH:SetStatusBarColor(T.color.r, T.color.g, T.color.b)
+		end
+
+		self.SwingOH.bg = self.SwingOH:CreateTexture(nil, "BORDER")
+		self.SwingOH.bg:SetAllPoints(self.SwingOH)
+		self.SwingOH.bg:SetTexture(C.media.texture)
+		if C.unitframe.own_color == true then
+			self.SwingOH.bg:SetVertexColor(C.unitframe.uf_color[1], C.unitframe.uf_color[2], C.unitframe.uf_color[3], 0.2)
+		else
+			self.SwingOH.bg:SetVertexColor(T.color.r, T.color.g, T.color.b, 0.2)
+		end
+
+		self.SwingOH.Text = T.SetFontString(self.SwingOH, C.font.unit_frames_font, C.font.unit_frames_font_size, C.font.unit_frames_font_style)
+		self.SwingOH.Text:SetPoint("CENTER", 0, 0)
+		self.SwingOH.Text:SetTextColor(1, 1, 1)
 	end
 
 	if C.unitframe.show_arena and unit == "arena" then
@@ -1126,12 +1150,16 @@ local function Shared(self, unit)
 	end
 
 	-- Agro border
+	local LibBanzai = T.classic and LibStub("LibBanzai-2.0", true)
+
 	if C.raidframe.aggro_border == true and unit ~= "arenatarget" then
 		table.insert(self.__elements, T.UpdateThreat)
 		self:RegisterEvent("PLAYER_TARGET_CHANGED", T.UpdateThreat, true)
 		if not T.classic then
 			self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", T.UpdateThreat)
 			self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", T.UpdateThreat)
+		elseif LibBanzai then
+			LibBanzai:RegisterCallback(function() T.UpdateThreat(self, "UNIT_THREAT_LIST_UPDATE", unit) end)
 		end
 	end
 
