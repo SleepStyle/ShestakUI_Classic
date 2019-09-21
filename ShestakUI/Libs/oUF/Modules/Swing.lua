@@ -47,14 +47,21 @@ local function Melee(self)
 	local mhSpeed, ohSpeed = UnitAttackSpeed(self.unit)
 	local itemId = GetInventoryItemID("player", 17)
 
+	local itemType = itemId and select(9, GetItemInfo(itemId)) or ""
+	local isWeapon = itemId and (itemType == "INVTYPE_WEAPON" or itemType == "INVTYPE_WEAPONOFFHAND")
+
 	if UnitGUID(self.unit) == tarGUID and event == "SWING_MISSED" then
 		if missType == "PARRY" then
-			bar.max = bar.max or bar.min + mhSpeed -- prevent issues swapping from ranged
+			bar.min = bar.min or now
+			bar.max = bar.max or bar.min + mhSpeed
+
 			bar.max = bar.min + ((bar.max - bar.min) * 0.6)
 			bar:SetMinMaxValues(bar.min, bar.max)
 
-			if itemId and barOH then
-				barOH.max = barOH.max or barOH.min + ohSpeed -- prevent issues swapping from ranged
+			if isWeapon and barOH then
+				barOH.min = barOH.min or now
+				barOH.max = barOH.max or barOH.min + ohSpeed
+
 				barOH.max = barOH.min + ((barOH.max - barOH.min) * 0.6)
 				barOH:SetMinMaxValues(barOH.min, barOH.max)
 			end
@@ -71,7 +78,7 @@ local function Melee(self)
 
 		local offhandEvent = (event == "SWING_DAMAGE" and isOffhand == true) or (event == "SWING_MISSED" and spellName == true)
 
-		if itemId and barOH and offhandEvent then
+		if isWeapon and barOH and offhandEvent then
 			barOH.min = now
 			barOH.max = barOH.min + ohSpeed
 
@@ -89,12 +96,12 @@ local function Melee(self)
 	end
 end
 
-local function Ranged(self, event, unitTarget, castGUID, spellID)
+local function Ranged(self, _, unit, _, spellID)
 	if spellID ~= 75 and spellID ~= 5019 then return end
 
 	local bar = self.Swing
 	bar.min = GetTime()
-	bar.max = bar.min + UnitRangedDamage(unitTarget)
+	bar.max = bar.min + UnitRangedDamage(unit)
 
 	bar:Show()
 	bar:SetMinMaxValues(bar.min, bar.max)
