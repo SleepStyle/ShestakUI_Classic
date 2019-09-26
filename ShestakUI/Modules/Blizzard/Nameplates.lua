@@ -364,7 +364,7 @@ local function UpdateTarget(self)
 		if C.nameplate.class_icons == true then
 			self.Class.Icon:SetSize(((C.nameplate.height + C.nameplate.ad_height) * 2 * T.noscalemult) + 8, ((C.nameplate.height + C.nameplate.ad_height) * 2 * T.noscalemult) + 8)
 		end
-		self:SetAlpha(C.nameplate.target_alpha)
+		self:SetAlpha(1)
 	else
 		self:SetSize(C.nameplate.width * T.noscalemult, C.nameplate.height * T.noscalemult)
 		self.Castbar:SetPoint("BOTTOMLEFT", self.Health, "BOTTOMLEFT", 0, -8-(C.nameplate.height * T.noscalemult))
@@ -373,7 +373,7 @@ local function UpdateTarget(self)
 			self.Class.Icon:SetSize((C.nameplate.height * 2 * T.noscalemult) + 8, (C.nameplate.height * 2 * T.noscalemult) + 8)
 		end
 		if not UnitExists("target") or UnitIsUnit(self.unit, "player") then
-			self:SetAlpha(C.nameplate.target_alpha)
+			self:SetAlpha(1)
 		else
 			self:SetAlpha(C.nameplate.alpha)
 		end
@@ -512,18 +512,11 @@ local function style(self, unit)
 	self.Power.bg:SetTexture(C.media.texture)
 	self.Power.bg.multiplier = 0.2
 
-	-- Hide Blizzard Power Bar and changed position for Class Bar
+	-- Hide Blizzard Power Bar
 	if not T.classic then
 		hooksecurefunc(_G.NamePlateDriverFrame, "SetupClassNameplateBars", function(frame)
-			if frame.classNamePlateMechanicFrame then
-				local point, _, relativePoint, xOfs = frame.classNamePlateMechanicFrame:GetPoint()
-				if point then
-					if point == "TOP" and C_NamePlate.GetNamePlateForUnit("player") then
-						frame.classNamePlateMechanicFrame:SetPoint(point, C_NamePlate.GetNamePlateForUnit("player"), relativePoint, xOfs, 53)
-					else
-						frame.classNamePlateMechanicFrame:SetPoint(point, C_NamePlate.GetNamePlateForUnit("target"), relativePoint, xOfs, -5)
-					end
-				end
+			if not frame or frame:IsForbidden() then
+				return
 			end
 			if frame.classNamePlatePowerBar then
 				frame.classNamePlatePowerBar:Hide()
