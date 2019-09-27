@@ -489,6 +489,7 @@ C["announcements"] = {
 --	Automation options
 ----------------------------------------------------------------------------------------
 C["automation"] = {
+	["dismount_stand"] = true,					-- Auto dismount/stand
 	["release"] = true,							-- Auto release the spirit in battlegrounds
 	["screenshot"] = false,						-- Take screenshot when player get achievement
 	["solve_artifact"] = true,					-- Auto popup for solve artifact
@@ -521,6 +522,10 @@ C["reminder"] = {
 	["raid_buffs_size"] = 19.2,					-- Icon size
 	["raid_buffs_alpha"] = 0,					-- Transparent icons when the buff is present
 }
+
+if T.classic then
+	C["reminder"]["raid_buffs_size"] = 16
+end
 
 ----------------------------------------------------------------------------------------
 --	Raid cooldowns options
